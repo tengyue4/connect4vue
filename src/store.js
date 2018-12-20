@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { Coordinator } from './connect4/Coordinator'
-import { findCell, is4Connected, autoFindCell } from './util'
+import { 
+    findRow, is4Connected, findCellNaive, findCellMedian, findCellDefensive
+} from './util'
 
 
 Vue.use(Vuex)
@@ -20,10 +22,10 @@ export default new Vuex.Store({
     getters: {
         currentPlayer: ({players, cursor}) => {
             if(players.length){
-                let {name, color, auto} = players[cursor % players.length];
-                return {name, color, auto};
+                let {name, color, auto, level} = players[cursor % players.length];
+                return {name, color, auto, level};
             }else{
-                return {name: null, color: null, auto: null};
+                return {name: null, color: null, auto: null, level: null};
             }
         }
     },
@@ -106,10 +108,20 @@ export default new Vuex.Store({
         },
         
         play ({ state, commit }, payload){
-            let {color, name, col, auto} = payload;
-            let row = findCell(state.grid, col, state.nrow, state.ncol);
+            let {color, name, col, auto, level} = payload;
+            let row = findRow(state.grid, col, state.nrow, state.ncol);
             if(auto){
-                let cell = autoFindCell(state.grid, color);
+                let cell;
+                if(level == 0){
+                    cell = findCellNaive(state.grid, color);
+                }else if(level == 1){
+                    cell = findCellMedian(state.grid, color);
+                }else if(level == 2){
+                    let index = state.players.findIndex(player => player.color === color);
+                    let len = state.players.length;
+                    let nextColor = state.players[(index + 1) % len].color;
+                    cell = findCellDefensive(state.grid, color, nextColor);
+                }
                 row = cell.row;
                 col = cell.col;
             }

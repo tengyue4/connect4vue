@@ -11,14 +11,32 @@
         <div v-show="players.length < 5">
             <h3>Add Player</h3>
             <div>
-                <label >name: </label>
-                <input type="text" v-model = "name">
-                <label >color: </label>
-                <select v-model="color">
-                    <option v-for="(color, i) in remainColors" :key="i">{{color}}</option>
-                </select>
-                <input type="checkbox" v-model="auto">
-                <label>Auto</label>
+                <div>
+                    <label >name: </label>
+                    <input type="text" v-model = "name">
+                </div>
+                <br>
+                <div>
+                    <label >color: </label>
+                    <select v-model="color">
+                        <option v-for="(color, i) in remainColors" :key="i">{{color}}</option>
+                    </select>
+                </div>
+                <br>
+                <div>
+                    <input type="checkbox" v-model="auto">
+                    <label>Auto (Play by computer)</label>
+                </div>
+                <br>
+                <div v-if="auto">
+                    <label >level: </label>
+                    <select v-model="level">
+                        <option :value="0">Naive</option>
+                        <option :value="1">Median</option>
+                        <option :value="2">Defensive</option>
+                    </select>
+                </div>
+                <br>
                 <button @click="add">add</button>
             </div>
         </div>
@@ -42,6 +60,7 @@ export default {
             name: "",
             color: "",
             auto: false,
+            level: 0,
             rows: 10,
             cols: 10,
             colors: ['red', 'blue', 'green', 'yellow', 'black'],
@@ -64,6 +83,7 @@ export default {
             this.name = "";
             this.color = "";
             this.auto = false;
+            this.level = 0;
         },
         add(){
             if(!this.name || !this.color){
@@ -75,7 +95,8 @@ export default {
             this.players.push({
                 name: this.name,
                 color: this.color,
-                auto: this.auto
+                auto: this.auto,
+                level: this.level
             });
             this.cleanForm();
         },

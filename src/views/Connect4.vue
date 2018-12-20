@@ -50,9 +50,9 @@ export default {
             if(this.loading){
                 return alert("Please wait");
             }
-            let {name, color, auto} = this.currentPlayer;
+            let {name, color, auto, level} = this.currentPlayer;
             this.$store.dispatch('play', {
-                col, name, color, auto
+                col, name, color, auto, level
             }).then(res => {
                 if(!res.filled){
                     return;
