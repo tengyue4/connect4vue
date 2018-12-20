@@ -24,6 +24,10 @@
         </div>
         <br><br><br><br><br><br>
         <div v-if="players.length >= 2">
+            <label >rows: </label>
+            <input type="number" step="1" min="10" v-model = "rows">
+            <label >columns: </label>
+            <input type="number" step="1" min="10" v-model = "cols">
             <button @click="startGame">Start Game !</button>
         </div>
     </div>
@@ -38,6 +42,8 @@ export default {
             name: "",
             color: "",
             auto: false,
+            rows: 10,
+            cols: 10,
             colors: ['red', 'blue', 'green', 'yellow', 'black'],
             players: []
         }
@@ -81,12 +87,14 @@ export default {
             if(this.players.length < 2){
                 return alert("you need at least 2 players to play.")
             }
+            let nrow = Math.floor(this.rows);
+            let ncol = Math.floor(this.cols);
+            if(nrow < 10 || nrow > 30 || ncol < 10 || ncol > 30){
+                return alert("illegal dimensions. rows/cols should between 10 and 30");
+            }
             this.$store.dispatch("startGame", {
                 players: this.players, 
-                dimensions:{
-                    nrow: 10,
-                    ncol: 20
-                }
+                dimensions:{nrow, ncol}
             });
             this.$router.push({ name: 'connect4' });
         }
