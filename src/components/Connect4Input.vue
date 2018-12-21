@@ -48,6 +48,11 @@
             <input type="number" step="1" min="10" v-model = "cols">
             <button @click="startGame">Start Game !</button>
         </div>
+        <hr>
+        <h3>Recent Winners:</h3>
+        <div>
+            <p v-for="(winner, i) in winners" :key="i+'winner'">{{new Date(winner.datetime).toLocaleString()}}   ||   {{winner.name}}</p>
+        </div>
     </div>
 </template>
 
@@ -64,7 +69,8 @@ export default {
             rows: 10,
             cols: 10,
             colors: ['red', 'blue', 'green', 'yellow', 'black'],
-            players: []
+            players: [],
+            winners: []
         }
     },
     computed: {
@@ -119,6 +125,14 @@ export default {
             });
             this.$router.push({ name: 'connect4' });
         }
+    },
+    created(){
+        this.$store.dispatch("listWinners")
+        .then(res => {
+            res.data.sort((a, b) => b.datetime - a.datetime);
+            this.winners = res.data;
+        })
+        
     }
     
 }

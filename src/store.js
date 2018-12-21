@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 import { Coordinator } from './connect4/Coordinator'
 import { 
     findRow, is4Connected, findCellNaive, findCellMedian, findCellDefensive
@@ -140,6 +141,14 @@ export default new Vuex.Store({
 
         updateLog({commit}, message){
             commit("pushLog", message);
+        },
+
+        listWinners({commit}){
+            return axios.get('https://h3rc2rseng.execute-api.ap-northeast-1.amazonaws.com/dev/list');   
+        },
+
+        addWinner({commit}, name){
+            return axios.post('https://h3rc2rseng.execute-api.ap-northeast-1.amazonaws.com/dev/save', {name});
         }
     }
 })

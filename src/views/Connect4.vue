@@ -60,8 +60,12 @@ export default {
                 if(res.win){
                     alert(`Game Over, ${name} win!`);
                     this.$store.dispatch("updateLog", `Game Over, ${name} win!`);
-                    this.$store.dispatch("gameOver");
-                    this.$router.push({ name: 'home' });
+                    this.$store.dispatch("addWinner", name)
+                    .then(data => {
+                        console.log(data);
+                        this.$store.dispatch("gameOver");
+                        this.$router.push({ name: 'home' });
+                    });
                 }
                 if(res.isFull){
                     alert(`Game Over, No one wins.`);
